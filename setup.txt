@@ -1,0 +1,14 @@
+python -m pip install --upgrade pip
+pip install Flask
+pip install Flask-WTF
+pip install fastapi-csrf-protect
+pip install -U Flask-SQLAlchemy
+# pip install pymysql
+pip install mysqlclient
+
+1st)
+docker run --name mysqldb2 -e MYSQL_ROOT_PASSWORD=gf637 -d -p3306:3306 mysql
+docker exec -it mysqldb2 bash
+
+after)
+docker start mysql
