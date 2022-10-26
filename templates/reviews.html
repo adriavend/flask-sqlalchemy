@@ -4,18 +4,21 @@
 
 {% block content %}
 
-<div class="container">
-
     {% if comments %}
-
-        {% for c in comments.items %}
-
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <hr>
-                    <h2 class="section-heading"> {{ c.username}} </h2>
+    
+        {% for c in comments %}
+        
+            <div class="card mb-3" id="comment_{{ c.id }}">
+                <div class="card-header">
+                   # {{ loop.index }} - {{ c.username}}
+                </div>
+                <div class="card-body">
+                    <!-- <h2 class="section-heading">  </h2> -->
                     <h5> {{ date_format(c.create_date) }} </h5>
                     <p> {{ c.text }}</p>
+                    <div class="d-flex">
+                        <button class="btn btn-danger btn-sm btn-comment-delete" data-target="{{ c.id }}">Delete</button>
+                    </div>
                 </div>
             </div>
 
@@ -23,6 +26,45 @@
 
     {% endif %}
 
-</div>
+{% endblock %}
+
+
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+    var csrf_token = "{{ csrf_token() }}";  
+
+    $(document).ready(function (){
+
+        $('.btn-comment-delete').click(function (e) {
+            let id = parseInt(e.target.dataset.target);
+            if (!confirm('Esta seguro que desea eliminar el item seleccionado?')){
+                return;
+            }
+
+            fetch('/review/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "X-CSRFToken": csrf_token
+                },
+                // body: JSON.stringify({}),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    var result = data;
+                    if (result.ok){
+                        $('#comment_' + id).remove();
+                        alert('Comment deleted successfully');
+                    }
+                });
+        });
+
+    });
+    
+</script>
 
 {% endblock %}

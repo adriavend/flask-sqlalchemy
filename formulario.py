@@ -11,32 +11,27 @@ def validate_custom_honeypot(form, field):
         raise validators.ValidationError('El campo debe estar vacio.')
 
 class CommentForm(Form):
-    # username = StringField('username', 
-    #                         [
-    #                             validators.Required(message='El usuario es requerido'),
-    #                             validators.length(min=4, max=25, message='Debe ingresar un nombre de usuario de entre 4 y 25 caracteres')
-    #                         ])
-    # email = EmailField('Correo electronico', 
-    #                         [
-    #                             validators.Required(message='Debe ingresar un email'),
-    #                             validators.Email(message='Ingrese un email valido')
-    #                         ])
-    # password = PasswordField('Password', [validators.Required(message='Debe ingresar un password')])
-    comment = StringField('Comentario')
+    comment = StringField('Comentario', 
+                            [
+                                validators.DataRequired(message='Ingrese un comment'),
+                            ])
     honeypot = HiddenField('', [validate_custom_honeypot])
 
 class CreateForm(Form):
-    username = StringField('username', 
+    username = StringField('Username', 
                             [
                                 validators.DataRequired(message='El usuario es requerido'),
-                                # validators.length(min=4, max=25, message='Debe ingresar un nombre de usuario de entre 4 y 25 caracteres')
+                                validators.Length(min=4, max=25, message='Debe ingresar un nombre de usuario de entre 4 y 25 caracteres')
                             ])
-    email = EmailField('Correo electronico', 
+    email = EmailField('Email', 
                             [
                                 validators.DataRequired(message='Debe ingresar un email'),
-                                # validators.email_validator(message='Ingrese un email valido')
+                                # validators.Email()
                             ])
-    password = PasswordField('Password', [validators.DataRequired(message='Debe ingresar un password')])
+    password = PasswordField('Password', 
+                            [
+                                validators.DataRequired(message='Debe ingresar un password')
+                            ])
 
     #esto es un metodo overrride de username -> validate_<nombre_campo> para hacer la validacion de override.
     def validate_username(self, field):
@@ -46,9 +41,9 @@ class CreateForm(Form):
             raise validators.ValidationError('El username ya se encuentra registrado.')
 
 class LoginForm(Form):
-    username = StringField('username', 
+    username = StringField('Username', 
                             [
                                 validators.DataRequired(message='El usuario es requerido'),
-                                # validators.length(min=4, max=25, message='Debe ingresar un nombre de usuario de entre 4 y 25 caracteres')
+                                validators.Length(min=5, max=255, message='Debe ingresar un nombre de usuario de entre 4 y 25 caracteres')
                             ])
     password = PasswordField('Password', [validators.DataRequired(message='Debe ingresar un password')])

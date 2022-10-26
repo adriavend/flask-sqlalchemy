@@ -41,7 +41,7 @@ def page_error(e):
     #     return redirect(url_for('index'))
 @app.before_request
 def before_request():
-    if 'username' not in session and request.endpoint in ['comment']:
+    if 'username' not in session and request.endpoint in ['comment', 'reviews']:
         return redirect(url_for('login'))
     elif 'username' in session and request.endpoint in ['login', 'create']:
         return redirect(url_for('index'))
@@ -76,7 +76,8 @@ def login():
         if user is not None and user.verify_password(password):
             sucess_message = "Bienvenido {}".format(username)
             flash(sucess_message)
-            session['username'] = username # 17- creacion de session - al momento del login
+            # creacion de session
+            session['username'] = username
             session['user_id'] = user.id
             return redirect(url_for('index'))
         else:
@@ -108,9 +109,10 @@ def comment():
 
         success_message = "Nuevo comentario creado"
         flash(success_message)
+        return redirect(url_for('comment')) # comment = name function
 
     title = "Comentarios"
-    return render_template('comment.html', title=title, form = comment_form)
+    return render_template('comment.html', title=title, form=comment_form)
 
 @app.route('/reviews/', methods=['GET'])
 @app.route('/reviews/<int:page>', methods=['GET'])
@@ -119,12 +121,20 @@ def reviews(page = 1):
     comments = Comment.query.join(User).add_columns(
         User.username, 
         Comment.text,
-        Comment.create_date
+        Comment.create_date,
+        Comment.id
         ).all()
         #.paginate(page,per_page,False) # page-> pagina inicial, per_page-> cant paginas
-    print(comments)
+    # print(comments)
 
     return render_template('reviews.html', comments = comments, date_format = date_format)
+
+@app.route('/review/<int:id>', methods=['DELETE'])
+def review_delete_ajax(id):
+    Comment.query.filter_by(id=id).delete()
+    db.session.commit()
+    return json.dumps({ 'ok': True, 'id': id})
+
 
 @app.route('/cookie')
 def cookie():
@@ -141,7 +151,7 @@ def logout():
         session.pop('user_id')
         print('Se elimino exitosamente la cookie de session')
 
-    return redirect(url_for('index')) # redirecciona a login, login = nombre de la funcion no de la url.
+    return redirect(url_for('login')) # redirecciona a login, login = nombre de la funcion no de la url.
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():
@@ -169,4 +179,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all(); #se encarga de crear todas las tablas que no esten creadas.
 
-    app.run(port=8000)
+    app.run(port=5050)

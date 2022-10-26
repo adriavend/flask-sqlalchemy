@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    console.log('hola mundo');
 
     function ajax_login(){
         $.ajax({
@@ -18,6 +17,9 @@ $(document).ready(function(){
     $("#login-form").submit(function(e){
         e.preventDefault();
         ajax_login();
-    })
+    });
 
+    setTimeout(function (){
+        $('.alert').alert('close');
+    }, 2500);
 })
