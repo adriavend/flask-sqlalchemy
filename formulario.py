@@ -2,7 +2,7 @@ from wtforms import Form
 from wtforms import StringField, HiddenField, PasswordField, StringField
 # from wtforms.fields.html5 import EmailField
 from wtforms.fields import EmailField
-from model import User
+from models.user import User
 
 from wtforms import validators
 

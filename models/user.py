@@ -1,10 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
+import datetime
+from db.db import db
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
-
-import datetime
-
-db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -26,11 +23,3 @@ class User(db.Model):
     def verify_password(self, password):
         b = check_password_hash(self.password, password)
         return b
-        
-class Comment(db.Model):
-    __tablename__ = 'comments'
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    text = db.Column(db.Text())
-    create_date = db.Column(db.DateTime, default=datetime.datetime.now)
