@@ -22,5 +22,10 @@
         </li> -->
       </ul>
     </div>
-    <a class="btn btn-outline-success my-2 my-sm-0" href="/logout">Logout</a>
+    {% if 'username' in session %}
+      <label class="text-white mt-2">Hello, {{ session["username"] }}</label>
+      <a class="btn btn-outline-success my-2 my-sm-0 ml-2" href="/logout">Logout</a>
+    {% else %}
+      <a class="btn btn-outline-success my-2 my-sm-0 ml-2" href="/login">Login</a>
+    {% endif %}
   </nav>

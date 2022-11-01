@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template
+from sqlalchemy import desc
 from db.db import db
 from helpers import date_format
 from models.comment import Comment
 from models.user import User
 import json
-
 
 reviews_bp = Blueprint("reviews", __name__)
 
@@ -16,8 +16,8 @@ def reviews(page = 1):
         User.username, 
         Comment.text,
         Comment.create_date,
-        Comment.id
-        ).all()
+        Comment.id).order_by(desc(Comment.id))
+        #.all()
         #.paginate(page,per_page,False) # page-> pagina inicial, per_page-> cant paginas
     # print(comments)
 
