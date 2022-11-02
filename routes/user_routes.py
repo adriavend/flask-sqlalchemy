@@ -18,7 +18,7 @@ def login():
 
         if user is not None and user.verify_password(password):
             sucess_message = "Bienvenido {}".format(username)
-            flash(sucess_message)
+            flash(sucess_message, category="success")
             # creacion de session
             session['username'] = username
             session['user_id'] = user.id
@@ -26,10 +26,8 @@ def login():
             return redirect(url_for('home.index'))
         else:
             error_message = "Usuario o password invalidos"
-            flash(error_message)
-                
-        session['username'] = username
-
+            flash(error_message, category="danger") # error, info, warning, message=any
+            
     title = 'Login'
     return render_template('login.html', title=title, form=login_form)
 
